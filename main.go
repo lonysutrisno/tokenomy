@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/lonysutrisno/tokenomy/pkg"
 	"github.com/lonysutrisno/tokenomy/service/checkout/delivery"
 )
 

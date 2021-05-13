@@ -1,7 +1,6 @@
 package delivery
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -18,7 +17,7 @@ type Route struct {
 type Routes []Route
 
 var routes = Routes{
-	Route{"/", "GET", Checkout},
+	Route{"/", "GET", GetData},
 }
 
 func NewRouter() *mux.Router {
@@ -30,18 +29,12 @@ func NewRouter() *mux.Router {
 	return router
 }
 
-func Checkout(w http.ResponseWriter, req *http.Request) {
-	var FormOrder []pkg.FormOrder
-	decode := json.NewDecoder(req.Body)
-	err := decode.Decode(&FormOrder)
-	if err != nil {
-		pkg.JSONResponse(w, 400, nil, err)
-		return
-	}
+func GetData(w http.ResponseWriter, req *http.Request) {
+	params := req.URL.Query().Get("id")
 
-	res, err := usecase.Checkout(FormOrder)
+	res, code, err := usecase.GetData(params)
 	if err != nil {
-		pkg.JSONResponse(w, 500, nil, err)
+		pkg.JSONResponse(w, code, nil, err)
 		return
 	}
 	pkg.JSONResponse(w, 200, res, nil)
